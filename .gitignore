@@ -1,0 +1,8 @@
+# Root ignore
+node_modules/
+.env
+.env.*
+.vite/
+.cache/
+dist/
+build/

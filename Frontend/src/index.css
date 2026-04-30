@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.root{
+    --bs-custom-background:linear-gradient(185deg, rgba(242, 242, 228, 1) 11%, rgba(135, 181, 204, 1) 74%, rgba(145, 193, 235, 1) 91%);
+}
+
