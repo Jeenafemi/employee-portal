@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../api/apiServices/authService";
@@ -10,7 +9,7 @@ export default function Signup() {
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [error, setError] = useState("");
@@ -23,8 +22,6 @@ export default function Signup() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError("");
-
-    // ✅ Frontend validation (only UX)
     if (form.password !== form.confirmPassword) {
       return setError("Passwords do not match");
     }
@@ -35,9 +32,7 @@ export default function Signup() {
       await register(form.name, form.email, form.password);
 
       navigate("/login");
-
     } catch (err: any) {
-      // ✅ backend sends "User exists"
       setError(err || "Signup failed");
     } finally {
       setLoading(false);
@@ -52,9 +47,7 @@ export default function Signup() {
       >
         <h2 className="text-xl font-bold mb-4">Signup</h2>
 
-        {error && (
-          <p className="text-red-500 text-sm mb-2">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
         <input
           type="text"
@@ -86,7 +79,6 @@ export default function Signup() {
           required
         />
 
-        {/* ✅ Confirm Password (your requirement) */}
         <input
           type="password"
           name="confirmPassword"

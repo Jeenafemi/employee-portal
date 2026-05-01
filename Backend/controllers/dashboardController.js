@@ -1,75 +1,68 @@
-
 const Employee = require("../models/Employee");
 const Department = require("../models/Department");
-const Activity = require("../models/Activity"); // 🔥 NEW
+const Activity = require("../models/Activity");
 const mongoose = require("mongoose");
 
 exports.dashboard = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    
     const totalEmployees = await Employee.countDocuments({ userId });
 
-   
     const activeEmployees = await Employee.countDocuments({
       userId,
-      status: 1
+      status: 1,
     });
 
     const inactiveEmployees = await Employee.countDocuments({
       userId,
-      status: 0
+      status: 0,
     });
 
-    
     const totalDepartments = await Department.countDocuments({ userId });
 
-    
     const departmentStats = await Employee.aggregate([
       {
         $match: {
-          userId: new mongoose.Types.ObjectId(userId)
-        }
+          userId: new mongoose.Types.ObjectId(userId),
+        },
       },
       {
         $group: {
           _id: "$departmentId",
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
         $lookup: {
           from: "departments",
           localField: "_id",
           foreignField: "_id",
-          as: "department"
-        }
+          as: "department",
+        },
       },
       {
         $unwind: {
           path: "$department",
-          preserveNullAndEmptyArrays: true
-        }
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $project: {
           _id: 0,
           departmentId: "$_id",
           departmentName: "$department.name",
-          count: 1
-        }
-      }
+          count: 1,
+        },
+      },
     ]);
 
-    
     const recentActivities = await Activity.find({ userId })
-      .sort({ createdAt: -1 }) 
-      .limit(10)               
+      .sort({ createdAt: -1 })
+      .limit(10)
       .select("message type createdAt")
       .lean();
 
-    
     return res.status(200).json({
       status: 1,
       data: {
@@ -77,17 +70,16 @@ exports.dashboard = async (req, res) => {
           totalEmployees,
           activeEmployees,
           inactiveEmployees,
-          totalDepartments
+          totalDepartments,
         },
         departmentStats,
-        recentActivities 
-      }
+        recentActivities,
+      },
     });
-
   } catch (err) {
     return res.status(500).json({
       status: 0,
-      msg: err.message
+      msg: err.message,
     });
   }
 };

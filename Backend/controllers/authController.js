@@ -13,7 +13,7 @@ authController.signup = async (req, res) => {
     if (exist) {
       return res.status(400).json({
         status: 0,
-        msg: "User already exists"
+        msg: "User already exists",
       });
     }
 
@@ -22,18 +22,17 @@ authController.signup = async (req, res) => {
     await User.create({
       name,
       email,
-      password: hashed
+      password: hashed,
     });
 
     return res.status(200).json({
       status: 1,
-      msg: "Signup successful"
+      msg: "Signup successful",
     });
-
   } catch (err) {
     return res.status(500).json({
       status: 0,
-      msg: err.message
+      msg: err.message,
     });
   }
 };
@@ -47,14 +46,14 @@ authController.login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         status: 0,
-        statusText: "Invalid email or password"
+        statusText: "Invalid email or password",
       });
     }
 
     if (user.status === 0) {
       return res.status(403).json({
         status: 0,
-        statusText: "User is inactive"
+        statusText: "User is inactive",
       });
     }
 
@@ -63,38 +62,28 @@ authController.login = async (req, res) => {
     if (!match) {
       return res.status(400).json({
         status: 0,
-        statusText: "Invalid email or password"
+        statusText: "Invalid email or password",
       });
     }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     return res.status(200).json({
       status: 1,
-      statusText: 'Login successful',
+      statusText: "Login successful",
       data: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
       },
       token,
-    //   msg: "Login successful",
-    //   token,
-    //   user: {
-    //     id: user._id,
-    //     name: user.name,
-    //     email: user.email
-    //   }
     });
-
   } catch (err) {
     return res.status(500).json({
       status: 0,
-      statusText: err.message
+      statusText: err.message,
     });
   }
 };

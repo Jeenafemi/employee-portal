@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { getEmployee } from "../../api/apiServices/employeeService";
@@ -7,8 +6,6 @@ import { toast } from "react-toastify";
 const ViewEmployee = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // ✅ support both state + query param
   const [params] = useSearchParams();
   const id = location.state?.id || params.get("id");
 
@@ -43,8 +40,6 @@ const ViewEmployee = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto bg-white shadow rounded-lg p-6 space-y-6">
-
-        {/* 🔹 HEADER */}
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">Employee Details</h2>
           <button
@@ -55,21 +50,19 @@ const ViewEmployee = () => {
           </button>
         </div>
 
-        {/* 🔥 DASHBOARD CARDS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-
           <div className="bg-white border rounded-lg p-4 shadow-sm">
             <p className="text-gray-500 text-sm">Employee ID</p>
-            <h2 className="text-lg font-semibold">
-              {employee.employeeId}
-            </h2>
+            <h2 className="text-lg font-semibold">{employee.employeeId}</h2>
           </div>
 
           <div className="bg-white border rounded-lg p-4 shadow-sm">
             <p className="text-gray-500 text-sm">Status</p>
-            <h2 className={`text-lg font-semibold ${
-              employee.status === 1 ? "text-green-600" : "text-red-600"
-            }`}>
+            <h2
+              className={`text-lg font-semibold ${
+                employee.status === 1 ? "text-green-600" : "text-red-600"
+              }`}
+            >
               {employee.status === 1 ? "Active" : "Inactive"}
             </h2>
           </div>
@@ -87,10 +80,8 @@ const ViewEmployee = () => {
               {employee.departmentName || "N/A"}
             </h2>
           </div>
-
         </div>
 
-        {/* 🔥 TABS */}
         <div className="flex gap-6 border-b pb-2 overflow-x-auto">
           {[
             { id: "overview", label: "Overview" },
@@ -113,7 +104,6 @@ const ViewEmployee = () => {
           ))}
         </div>
 
-        {/* 🔹 OVERVIEW */}
         {activeTab === "overview" && (
           <div className="grid md:grid-cols-2 gap-4">
             <div>
@@ -148,7 +138,6 @@ const ViewEmployee = () => {
           </div>
         )}
 
-        {/* 🔹 JOB DETAILS */}
         {activeTab === "job" && (
           <div className="grid md:grid-cols-2 gap-4">
             <div>
@@ -188,12 +177,11 @@ const ViewEmployee = () => {
           </div>
         )}
 
-        {/* 🔹 SALARY */}
         {activeTab === "salary" && (
           <div className="space-y-3">
             <p>
-              <span className="text-gray-500">Salary: </span>
-              ₹{employee.salary || 0}
+              <span className="text-gray-500">Salary: </span>₹
+              {employee.salary || 0}
             </p>
             <p>
               <span className="text-gray-500">Payment Type: </span>
@@ -202,18 +190,31 @@ const ViewEmployee = () => {
           </div>
         )}
 
-        {/* 🔹 ADDRESS */}
         {activeTab === "address" && (
           <div className="space-y-3">
-            <p><span className="text-gray-500">Current:</span> {employee.currentAddress || "N/A"}</p>
-            <p><span className="text-gray-500">Permanent:</span> {employee.permanentAddress || "N/A"}</p>
-            <p><span className="text-gray-500">City:</span> {employee.city || "N/A"}</p>
-            <p><span className="text-gray-500">State:</span> {employee.state || "N/A"}</p>
-            <p><span className="text-gray-500">Pincode:</span> {employee.pincode || "N/A"}</p>
+            <p>
+              <span className="text-gray-500">Current:</span>{" "}
+              {employee.currentAddress || "N/A"}
+            </p>
+            <p>
+              <span className="text-gray-500">Permanent:</span>{" "}
+              {employee.permanentAddress || "N/A"}
+            </p>
+            <p>
+              <span className="text-gray-500">City:</span>{" "}
+              {employee.city || "N/A"}
+            </p>
+            <p>
+              <span className="text-gray-500">State:</span>{" "}
+              {employee.state || "N/A"}
+            </p>
+            <p>
+              <span className="text-gray-500">Pincode:</span>{" "}
+              {employee.pincode || "N/A"}
+            </p>
           </div>
         )}
 
-        {/* 🔹 ACTIVITY */}
         {activeTab === "activity" && (
           <div className="space-y-3">
             <p>
@@ -222,13 +223,16 @@ const ViewEmployee = () => {
             </p>
             <p>
               <span className="text-gray-500">Status: </span>
-              <span className={employee.status === 1 ? "text-green-600" : "text-red-600"}>
+              <span
+                className={
+                  employee.status === 1 ? "text-green-600" : "text-red-600"
+                }
+              >
                 {employee.status === 1 ? "Active" : "Inactive"}
               </span>
             </p>
           </div>
         )}
-
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { getDashboard } from "../api/apiServices/dashboardService";
 import { toast } from "react-toastify";
@@ -24,7 +23,6 @@ const Dashboard = () => {
 
   if (!data) return <p className="p-6">Loading...</p>;
 
-  //  Helper for badge styles
   const getBadge = (type: string) => {
     switch (type) {
       case "EMPLOYEE_CREATED":
@@ -65,13 +63,10 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/*  SUMMARY CARDS */}
       <div className="grid grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded shadow">
           <p>Total Employees</p>
-          <h2 className="text-2xl font-bold">
-            {data.summary.totalEmployees}
-          </h2>
+          <h2 className="text-2xl font-bold">{data.summary.totalEmployees}</h2>
         </div>
 
         <div className="bg-white p-4 rounded shadow">
@@ -96,7 +91,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/*  DEPARTMENT STATS */}
       <div className="bg-white p-4 rounded shadow">
         <h3 className="font-bold mb-3">Department Distribution</h3>
 
@@ -118,7 +112,6 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/*  RECENT ACTIVITY */}
       <div className="bg-white p-4 rounded shadow">
         <h3 className="font-bold mb-3">Recent Activities</h3>
 
@@ -130,18 +123,15 @@ const Dashboard = () => {
               <div className="flex justify-between items-center py-2">
                 {/* LEFT */}
                 <div className="flex flex-col">
-                  <span className="text-gray-800">
-                    {activity.message}
-                  </span>
+                  <span className="text-gray-800">{activity.message}</span>
                   <span className="text-xs text-gray-400">
                     {new Date(activity.createdAt).toLocaleString()}
                   </span>
                 </div>
 
-                {/* RIGHT BADGE */}
                 <span
                   className={`text-xs px-2 py-1 rounded ${getBadge(
-                    activity.type
+                    activity.type,
                   )}`}
                 >
                   {getLabel(activity.type)}

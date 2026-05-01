@@ -1,29 +1,24 @@
-
 const Employee = require("../models/Employee");
 const Activity = require("../models/Activity");
 const mongoose = require("mongoose");
-
 
 exports.upsertEmployee = async (req, res) => {
   try {
     const userId = req.user.id;
     const { _id, departmentId, ...data } = req.body;
 
-    
     if (departmentId && mongoose.Types.ObjectId.isValid(departmentId)) {
       data.departmentId = new mongoose.Types.ObjectId(departmentId);
     } else {
       data.departmentId = null;
     }
 
-    
     if (data.skills) {
       if (typeof data.skills === "string") {
-        data.skills = data.skills.split(",").map(s => s.trim());
+        data.skills = data.skills.split(",").map((s) => s.trim());
       }
     }
 
-    
     if (data.experience !== "" && data.experience !== undefined) {
       const exp = Number(data.experience);
       if (!isNaN(exp)) {
@@ -35,7 +30,6 @@ exports.upsertEmployee = async (req, res) => {
       delete data.experience;
     }
 
-    
     if (data.salary !== "" && data.salary !== undefined) {
       const sal = Number(data.salary);
       if (!isNaN(sal)) {
@@ -53,7 +47,7 @@ exports.upsertEmployee = async (req, res) => {
       employee = await Employee.findOneAndUpdate(
         { _id, userId },
         { $set: data },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       );
 
       if (!employee) {
@@ -63,27 +57,22 @@ exports.upsertEmployee = async (req, res) => {
         });
       }
 
-      
       Activity.create({
         userId: new mongoose.Types.ObjectId(userId),
         type: "EMPLOYEE_UPDATED",
-        message: `${employee.name} updated`
-      }).catch(err => console.error("Activity error:", err));
-    }
-
-    
-    else {
+        message: `${employee.name} updated`,
+      }).catch((err) => console.error("Activity error:", err));
+    } else {
       employee = await Employee.create({
         ...data,
         userId,
       });
 
-     
       Activity.create({
         userId: new mongoose.Types.ObjectId(userId),
         type: "EMPLOYEE_CREATED",
-        message: `${employee.name} created`
-      }).catch(err => console.error("Activity error:", err));
+        message: `${employee.name} created`,
+      }).catch((err) => console.error("Activity error:", err));
     }
 
     return res.status(200).json({
@@ -91,9 +80,8 @@ exports.upsertEmployee = async (req, res) => {
       msg: _id ? "Employee updated" : "Employee created",
       data: employee,
     });
-
   } catch (err) {
-    console.error("🔥 UPSERT ERROR:", err);
+    console.error(" UPSERT ERROR:", err);
 
     return res.status(500).json({
       status: 0,
@@ -101,9 +89,6 @@ exports.upsertEmployee = async (req, res) => {
     });
   }
 };
-
-
-
 
 exports.listEmployees = async (req, res) => {
   try {
@@ -142,7 +127,6 @@ exports.listEmployees = async (req, res) => {
       status: 1,
       data: employees,
     });
-
   } catch (err) {
     console.error("LIST ERROR:", err);
     return res.status(500).json({
@@ -151,8 +135,6 @@ exports.listEmployees = async (req, res) => {
     });
   }
 };
-
-
 
 exports.getEmployee = async (req, res) => {
   try {
@@ -199,7 +181,6 @@ exports.getEmployee = async (req, res) => {
       status: 1,
       data: employee[0],
     });
-
   } catch (err) {
     console.error("GET ERROR:", err);
     return res.status(500).json({
@@ -216,33 +197,31 @@ exports.deleteEmployee = async (req, res) => {
 
     const employee = await Employee.findOneAndDelete({
       _id: id,
-      userId
+      userId,
     });
 
     if (!employee) {
       return res.status(404).json({
         status: 0,
-        msg: "Employee not found or unauthorized"
+        msg: "Employee not found or unauthorized",
       });
     }
 
-    // ✅ safe activity (non-blocking)
     Activity.create({
       userId: new mongoose.Types.ObjectId(userId),
       type: "EMPLOYEE_DELETED",
-      message: `${employee.name} deleted`
-    }).catch(err => console.error("Activity error:", err));
+      message: `${employee.name} deleted`,
+    }).catch((err) => console.error("Activity error:", err));
 
     return res.status(200).json({
       status: 1,
-      msg: "Employee deleted successfully"
+      msg: "Employee deleted successfully",
     });
-
   } catch (err) {
     console.error("DELETE ERROR:", err);
     return res.status(500).json({
       status: 0,
-      msg: err.message
+      msg: err.message,
     });
   }
 };
@@ -257,21 +236,19 @@ exports.toggleStatus = async (req, res) => {
     if (!employee) {
       return res.status(404).json({
         status: 0,
-        msg: "Employee not found"
+        msg: "Employee not found",
       });
     }
 
-    
     employee.status = employee.status === 1 ? 0 : 1;
     await employee.save();
 
-   
     await Activity.create({
       userId,
       type: "EMPLOYEE_STATUS",
       message: `${employee.name} marked as ${
         employee.status === 1 ? "Active" : "Inactive"
-      }`
+      }`,
     });
 
     return res.status(200).json({
@@ -279,14 +256,13 @@ exports.toggleStatus = async (req, res) => {
       msg: `Employee marked as ${
         employee.status === 1 ? "Active" : "Inactive"
       }`,
-      data: employee
+      data: employee,
     });
-
   } catch (err) {
     console.error("TOGGLE ERROR:", err);
     return res.status(500).json({
       status: 0,
-      msg: err.message
+      msg: err.message,
     });
   }
 };

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ResumeModal from "../ui/ResumeModal";
 import {
   listEmployees,
   toggleEmployeeStatus,
 } from "../../api/apiServices/employeeService";
 import { toast } from "react-toastify";
-import { FileText, MoreVertical } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import Swal from "sweetalert2";
 import { deleteEmployee } from "../../api/apiServices/employeeService";
 
@@ -14,12 +13,9 @@ const ListEmployees = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState<any[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedPdf, setSelectedPdf] = useState("");
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 🔹 fetch employees
   const fetchData = async () => {
     try {
       const res = await listEmployees();
@@ -34,11 +30,6 @@ const ListEmployees = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleViewResume = (resume: string) => {
-    setSelectedPdf(resume);
-    setModalOpen(true);
-  };
 
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
@@ -69,12 +60,10 @@ const ListEmployees = () => {
     navigate("/employee/view", { state: { id: item._id } });
   };
 
-  //  NAVIGATE TO EDIT
   const handleEdit = (item: any) => {
     navigate("/employee/upsert", { state: item });
   };
 
-  //  CREATE NEW
   const handleCreate = () => {
     navigate("/employee/upsert");
   };
@@ -109,7 +98,6 @@ const ListEmployees = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      {/* 🔹 HEADER */}
       <div className="flex justify-between mb-4">
         <input
           placeholder="Search employee..."
@@ -142,23 +130,14 @@ const ListEmployees = () => {
           <tbody>
             {filtered.map((item) => (
               <tr key={item._id} className="border-b">
-                {/* Name */}
                 <td className="p-4 align-middle">{item.name}</td>
-
-                {/* Email */}
                 <td className="p-4 align-middle">{item.email}</td>
-
-                {/* Phone */}
                 <td className="p-4 align-middle">{item.phone}</td>
-
-                {/* Department */}
                 <td className="p-4 text-center align-middle">
                   <span className="px-2 py-1 rounded bg-blue-100 text-blue-800 text-xs inline-block">
                     {item.departmentName || "N/A"}
                   </span>
                 </td>
-
-                {/* Status */}
                 <td className="p-4 text-center align-middle">
                   <button
                     onClick={() => handleToggleStatus(item)}
@@ -172,7 +151,6 @@ const ListEmployees = () => {
                   </button>
                 </td>
 
-                {/* Actions */}
                 <td className="p-4 text-center align-middle relative">
                   <button
                     onClick={() =>
@@ -219,12 +197,6 @@ const ListEmployees = () => {
           </tbody>
         </table>
       </div>
-
-      <ResumeModal
-        pdfPath={selectedPdf}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
     </div>
   );
 };

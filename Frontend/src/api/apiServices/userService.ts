@@ -6,7 +6,7 @@ export const getUser = async () => {
   try {
     const response = await axiosInstance.get(API.USERS.GET_USER);
     return response.data;
-  } 
+  }
   catch (error) {
     console.log(error);
 
@@ -21,17 +21,17 @@ export const getList = async () => {
     console.log(error);
   }
 }
-export const postForm = async (newApplication: {name:string; email: string; phone: string; linkedin: string; portfolio: string; experience: string; reactExperience: string; resume: string; coverLetter: string; startDate: string;} ) => {
+export const postForm = async (newApplication: { name: string; email: string; phone: string; linkedin: string; portfolio: string; experience: string; reactExperience: string; resume: string; coverLetter: string; startDate: string; }) => {
   try {
-    const response = await axiosInstance.post(API.POSTS.CREATE_POST,newApplication)
+    const response = await axiosInstance.post(API.POSTS.CREATE_POST, newApplication)
     return response.data;
   }
   catch (error) {
-console.log(error);
+    console.log(error);
   }
 }
 
-export const updateForm = async (updateApplication: {id: string,name:string; email: string; phone: string; linkedin: string; portfolio: string; experience: string; reactExperience: string; resume: string; coverLetter: string; startDate: string;}) => {
+export const updateForm = async (updateApplication: { id: string, name: string; email: string; phone: string; linkedin: string; portfolio: string; experience: string; reactExperience: string; resume: string; coverLetter: string; startDate: string; }) => {
   const { id, ...payload } = updateApplication;
   console.log('PUT to:', `${API.POSTS.UPDATE_POSTS}/${id}`, payload);
   return axiosInstance.put(`${API.POSTS.UPDATE_POSTS}/${id}`, payload);
@@ -68,7 +68,7 @@ export const updateHiredStatus = async ({
     resume: string;
     coverLetter: string;
     startDate: string;
-    hired: boolean; // ✅ Include hired flag
+    hired: boolean;
   };
 }) => {
   try {

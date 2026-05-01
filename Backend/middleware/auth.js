@@ -7,26 +7,23 @@ const ensureAuthorised = (req, res, next) => {
     if (!token) {
       return res.status(401).json({
         status: 0,
-        msg: "No token provided"
+        msg: "No token provided",
       });
     }
 
-    // optional: handle "Bearer token"
     const actualToken = token.startsWith("Bearer ")
       ? token.split(" ")[1]
       : token;
 
     const decoded = jwt.verify(actualToken, process.env.JWT_SECRET);
 
-    // attach user info to request
-    req.user = decoded; // { id: ... }
+    req.user = decoded;
 
     next();
-
   } catch (err) {
     return res.status(401).json({
       status: 0,
-      msg: "Invalid token"
+      msg: "Invalid token",
     });
   }
 };

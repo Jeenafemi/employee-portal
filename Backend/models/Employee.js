@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const employeeSchema = new mongoose.Schema(
@@ -6,19 +5,18 @@ const employeeSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      required: true
+      required: true,
     },
 
     departmentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "departments",
-      default: null
+      default: null,
     },
 
-    // 🔹 BASIC DETAILS
     employeeId: {
-      type: String, 
-      unique: true
+      type: String,
+      unique: true,
     },
 
     name: { type: String, required: true },
@@ -28,64 +26,54 @@ const employeeSchema = new mongoose.Schema(
 
     gender: {
       type: String,
-      enum: ["Male", "Female", "Other"]
+      enum: ["Male", "Female", "Other"],
     },
 
-    // JOB DETAILS
     jobTitle: String,
 
     employeeType: {
       type: String,
-      enum: ["Full-time", "Part-time", "Intern"]
+      enum: ["Full-time", "Part-time", "Intern"],
     },
 
     joiningDate: String,
 
     workLocation: {
       type: String,
-      enum: ["Office", "Remote"]
+      enum: ["Office", "Remote"],
     },
 
-    experience: Number, 
+    experience: Number,
 
-    skills: [String], 
+    skills: [String],
 
     linkedin: String,
 
-    // SALARY
     salary: Number,
 
     paymentType: {
       type: String,
-      enum: ["Monthly", "Hourly"]
+      enum: ["Monthly", "Hourly"],
     },
 
-    // ADDRESS
     currentAddress: String,
     permanentAddress: String,
     city: String,
     state: String,
     pincode: String,
 
-  
-    // STATUS
     status: {
       type: Number,
       enum: [0, 1],
-      default: 1
-    }
-
+      default: 1,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
-
 
 employeeSchema.pre("save", function (next) {
   if (!this.employeeId) {
-    this.employeeId =
-      "EMP" +
-      Date.now() +
-      Math.floor(Math.random() * 1000); 
+    this.employeeId = "EMP" + Date.now() + Math.floor(Math.random() * 1000);
   }
   next();
 });

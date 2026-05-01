@@ -1,8 +1,7 @@
-
 import axiosInstance from "../axiosInstance";
 import { toast } from "react-toastify";
 
-// LOGIN
+
 export const login = async (email: string, password: string) => {
   try {
     const res = await axiosInstance.post("/auth/login", {
@@ -29,7 +28,7 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-// SIGNUP
+
 export const register = async (
   name: string,
   email: string,
@@ -47,16 +46,16 @@ export const register = async (
     return res.data;
 
   } catch (error: any) {
-      const message = error.response?.data?.msg;
+    const message = error.response?.data?.msg;
 
-      toast.error(message);
+    toast.error(message);
 
     throw message;
   }
 };
 
 
-// LOGOUT
+
 export const logout = () => {
   localStorage.removeItem("token");
 };
